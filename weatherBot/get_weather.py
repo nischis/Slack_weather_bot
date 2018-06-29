@@ -39,14 +39,20 @@ class GetWeather:
 
   # 天気関連のファイル
   def open_file(self):
+
     try:
+      # カレントディレクトリを移動
+      current_path = os.getcwd()
+      next_path = os.path.join(current_path, "weatherBot")
+      os.chdir(next_path)
+
       # 対応している都市コードのファイル
       with open('./texts/area_codes.txt', 'r') as f:
         areas = [line.replace("\n", "").split(",") for line in f.readlines()]
-      
+        
       # 辞書型に整形
       self.area_code = dict(areas)
-      
+        
       # 天気の絵文字のファイル
       with open('./texts/weather_emoji.txt', 'r') as f:
         weather_emojis = [line.replace("\n", "").split(",") for line in f.readlines()]
@@ -57,11 +63,12 @@ class GetWeather:
       # いい時に付ける絵文字のファイル
       with open("./texts/good_emoji.txt", "r") as f:
         self.good_emoji = [line.replace("\n", "") for line in f.readlines()]
-      
+        
       # 悪い時に付ける絵文字のファイル
       with open("./texts/bad_emoji.txt", "r") as f:
         self.bad_emoji = [line.replace("\n", "") for line in f.readlines()]
 
+      os.chdir(current_path)
     except:
       print("can't open file")
       sys.exit(1)
@@ -93,8 +100,9 @@ class GetWeather:
     except Exception as e:
       print("Exception Error: ", e)
       sys.exit(1)
-      
+    
     return html_json
+      
 
   def set_weather_info(self, weather_json, day):
     self.weather = '分からない'
@@ -104,7 +112,7 @@ class GetWeather:
     try:
       self.weather = weather_json['forecasts'][day]['telop']
       self.max_temperature = str(weather_json['forecasts'][day]['temperature']['max']['celsius']) + "℃で"
-      self.min_temperature = str(weather_json['forecasts'][day]['temperature']['min']['celsius']) + "℃です" + random.choice(self.good_emoji)
+      self.min_temperature = str(weather_json['forecasts'][day]['temperature']['min']['celsius']) + "℃です" + + random.choice(self.good_emoji)
     except TypeError:
       pass
 
@@ -118,12 +126,13 @@ class GetWeather:
       reply = "対応している都市名を入れてくれないと答えれないです" + random.choice(self.bad_emoji)
       return reply
 
+    self.get_day()
+
     reply = ""
     for name,code in self.city.items():
       for a_day,number in self.day.items():
         weather_json = self.get_weather_info(code)
         self.set_weather_info(weather_json, int(number))
-
         reply += "\n{0}の{1}の天気は{2}です{3}\n".format(name, a_day, self.weather,self.weather_emoji[self.weather])
         reply += "最高気温は{0}、最低気温は{1}\n".format(self.max_temperature, self.min_temperature)
 

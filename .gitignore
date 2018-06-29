@@ -1,3 +1,4 @@
 .env
 __pycache__
+./weatherBot/__pycache__
 .DS_Store
