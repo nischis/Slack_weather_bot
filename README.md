@@ -1,4 +1,4 @@
-# お天気お姉さんbot for Slack
+# 天気自動返信ツール for Slack
   
 チャンネル上またはメンションで対応する地域の今日または明日または明後日の天気を尋ねると返信してくれるbot。  
 情報はlivedoorのWeather Hacksから。 
