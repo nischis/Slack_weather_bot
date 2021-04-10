@@ -12,9 +12,6 @@
 ## 環境  
 MacBook Air  
 Python 3.6.4  
-
-## サーバー
-raspberry pi 3  
   
 ## 使用したライブラリ  
 tweepy (Twiiterに接続)  
